@@ -7,3 +7,5 @@ Features
 - Users can add and delete a task
 - If the task is completed, you can just check-mark it
 - Newly added tasks displays on top
+
+Link - https://neverm1ndez.github.io/to-do-list/
