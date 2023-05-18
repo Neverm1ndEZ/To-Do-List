@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import Loading from "./components/Loading";
-import TodoList from "./components/TodoList";
 import axios from "axios";
 
 function App() {
@@ -14,10 +12,10 @@ function App() {
 	const addTask = () => {
 		const task = {
 			id: todos.length === 0 ? 1 : todos[todos.length - 1].id + 1,
-			taskName: newTask,
+			title: newTask,
 			completed: false,
 		};
-		setTodos([...todos, task]);
+		setTodos([task, ...todos]);
 		setNewTask("");
 	};
 
@@ -25,17 +23,12 @@ function App() {
 		setTodos(todos.filter((task) => task.id !== id));
 	};
 
-	const onUpdateTodo = (todo) => {
-		const updatedTodos = todos.map((task) => {
-			if (task.id === todo.id) {
-				return {
-					...task,
-					completed: !task.completed,
-				};
-			}
-			return task;
-		});
-		setTodos(updatedTodos);
+	const handleCheckboxChange = (id) => {
+		setTodos((prevTodos) =>
+			prevTodos.map((task) =>
+				task.id === id ? { ...task, completed: !task.completed } : task,
+			),
+		);
 	};
 
 	useEffect(() => {
@@ -61,16 +54,18 @@ function App() {
 						key={task.id}
 						className="list-group-item d-flex justify-content-between align-items-center"
 					>
-						{task.taskName}
-						<button onClick={() => deleteTask(task.id)}>X</button>
+						{task.title}
+						<input
+							type="checkbox"
+							checked={task.completed}
+							onChange={() => handleCheckboxChange(task.id)}
+						/>
+						{!task.completed && (
+							<button onClick={() => deleteTask(task.id)}>X</button>
+						)}
 					</li>
 				))}
 			</ul>
-			{todos ? (
-				<TodoList todos={todos} onUpdateTodo={onUpdateTodo} />
-			) : (
-				<Loading />
-			)}
 		</div>
 	);
 }
